@@ -7,7 +7,6 @@
   <meta name="description" content="Performance — кафе-сцена в центре Казани: татарская кухня в новом прочтении, завтраки до вечера и живая музыка по выходным. Учебный проект для портфолио.">
   <meta name="theme-color" content="#0F3D3E">
 
-  <!-- Приложение (PWA) -->
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icons/favicon.svg" type="image/svg+xml">
   <link rel="icon" href="icons/icon-192.png" type="image/png" sizes="192x192">
@@ -17,51 +16,88 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Performance">
 
-  <!-- Превью ссылки в мессенджерах -->
   <meta property="og:title" content="Performance — кафе-сцена в Казани">
   <meta property="og:description" content="Меню, программа вечеров и бронь стола онлайн.">
   <meta property="og:image" content="icons/og.png">
   <meta property="og:type" content="website">
 
-  <!-- Шрифты -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700&family=Unbounded:wght@400;600;800&display=swap" rel="stylesheet">
 
+  <script>
+    // тема и язык до загрузки стилей — чтобы не мигало
+    (function () {
+      var d = document.documentElement; d.classList.add('js');
+      try {
+        var t = JSON.parse(localStorage.getItem('pf-theme'));
+        d.dataset.theme = t || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        if (JSON.parse(localStorage.getItem('pf-lang')) === 'tt') d.lang = 'tt';
+      } catch (e) { d.dataset.theme = 'light'; }
+    })();
+  </script>
   <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/features.css">
   <link rel="stylesheet" href="css/motion.css">
-  <script>document.documentElement.classList.add('js');</script>
 </head>
-<body>
+<body data-page="home">
 
-  <!-- Занавес при загрузке -->
-  <div class="curtain" aria-hidden="true">
-    <div class="curtain__half curtain__half--l"></div>
-    <div class="curtain__half curtain__half--r"></div>
-    <div class="curtain__word">Performance</div>
+  <!-- Экран загрузки: чашка наполняется кофе -->
+  <div class="loader" aria-hidden="true">
+    <div class="loader__cup">
+      <svg viewBox="0 0 160 160">
+        <defs>
+          <clipPath id="cup-clip"><path d="M30 50h84v44a42 42 0 0 1-84 0Z"/></clipPath>
+        </defs>
+        <g class="loader__steam" fill="none" stroke="#E8C77F" stroke-width="4" stroke-linecap="round">
+          <path d="M58 38c-8-10 8-14 0-26"/><path d="M76 38c-8-10 8-14 0-26"/><path d="M94 38c-8-10 8-14 0-26"/>
+        </g>
+        <g clip-path="url(#cup-clip)">
+          <rect x="20" y="40" width="110" height="110" fill="#1C3A39"/>
+          <g class="loader__coffee"><path d="M10 150V60q15-8 30 0t30 0 30 0 30 0 30 0V150Z" fill="#9A6440"/><path d="M10 64q15-8 30 0t30 0 30 0 30 0 30 0" fill="none" stroke="#C99A72" stroke-width="4"/></g>
+        </g>
+        <path d="M30 50h84v44a42 42 0 0 1-84 0Z" fill="none" stroke="#EEF2EE" stroke-width="5" stroke-linejoin="round"/>
+        <path d="M114 62h8a16 16 0 0 1 0 32h-10" fill="none" stroke="#EEF2EE" stroke-width="5" stroke-linecap="round"/>
+        <path d="M18 142h108" stroke="#EEF2EE" stroke-width="5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="loader__num"><span id="loader-num">0</span>%</div>
+    <div class="loader__word">Performance</div>
   </div>
 
   <div class="progress" aria-hidden="true"><span></span></div>
 
   <!-- Шапка -->
   <header class="topbar">
-    <a href="#top" class="logo" aria-label="Performance, на главную">
+    <a href="#top" class="logo" aria-label="Performance">
       <svg class="logo__mark" viewBox="0 0 40 40" aria-hidden="true"><use href="#tulip"/></svg>
       <span class="logo__word">Performance</span>
     </a>
-    <nav class="topnav" aria-label="Разделы">
-      <a href="#menu">Меню</a>
-      <a href="#program">Программа</a>
-      <a href="#faq">Гостям</a>
-      <a href="#booking">Бронь</a>
-      <a href="#contacts">Контакты</a>
+    <nav class="topnav" aria-label="Разделы" data-i18n-attr="aria-label=nav.label">
+      <a href="#menu" data-i18n="nav.menu">Меню</a>
+      <a href="#builder" data-i18n="nav.builder">Конструктор</a>
+      <a href="#program" data-i18n="nav.program">Программа</a>
+      <a href="#booking" data-i18n="nav.booking">Бронь</a>
+      <a href="about.html" data-i18n="nav.about">О нас</a>
     </nav>
     <div class="topbar__actions">
-      <button class="icon-btn cart-btn" type="button" data-open="cart" aria-label="Корзина">
+      <div class="lang-switch" role="group" aria-label="Язык" data-i18n-attr="aria-label=lang.label">
+        <span class="lang-switch__pill" aria-hidden="true"></span>
+        <button type="button" data-lang="ru" aria-label="Русский">Рус</button>
+        <button type="button" data-lang="tt" aria-label="Татарча">Тат</button>
+      </div>
+      <button class="icon-btn theme-btn" type="button" data-theme-toggle aria-label="Сменить тему" data-i18n-attr="aria-label=theme.toggle">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <mask id="moon-mask"><rect width="24" height="24" fill="#fff"/><circle class="theme-btn__cut" cx="17" cy="7" r="6" fill="#000"/></mask>
+          <circle class="theme-btn__core" cx="12" cy="12" r="5.5" mask="url(#moon-mask)"/>
+          <g class="theme-btn__rays"><path d="M12 2v2M12 20v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M2 12h2M20 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></g>
+        </svg>
+      </button>
+      <button class="icon-btn cart-btn" type="button" data-open="cart" aria-label="Корзина" data-i18n-attr="aria-label=cart.title">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l-1.2 11.1a2 2 0 0 1-2 1.9H8.2a2 2 0 0 1-2-1.9L5 8Z"/><path d="M9 10V6a3 3 0 0 1 6 0v4"/></svg>
         <span class="cart-count" hidden>0</span>
       </button>
-      <button class="icon-btn burger" type="button" data-open="nav" aria-label="Открыть меню сайта">
+      <button class="icon-btn burger" type="button" data-open="nav" aria-label="Открыть меню сайта" data-i18n-attr="aria-label=nav.open">
         <span></span><span></span>
       </button>
     </div>
@@ -74,8 +110,12 @@
       <div class="hero__spot" aria-hidden="true"></div>
       <div class="hero__ornament" aria-hidden="true"></div>
 
+      <div class="hero__plate" aria-hidden="true">
+        <div class="p3d"><div class="p3d__spin" id="plate3d"></div></div>
+      </div>
+
       <div class="hero__top">
-        <p class="hero__place">Казань, ул. Баумана, 44</p>
+        <p class="hero__place" data-i18n="hero.place">Казань, ул. Баумана, 44</p>
         <p class="hero__status"><i></i><span id="open-status">Открыто до 23:00</span></p>
       </div>
 
@@ -85,17 +125,17 @@
       </h1>
 
       <div class="hero__bottom">
-        <p class="hero__lead">Кафе-сцена в центре Казани. Татарская кухня в новом прочтении, завтраки до вечера и живая музыка по выходным.</p>
+        <p class="hero__lead" data-i18n="hero.lead">Кафе-сцена в центре Казани. Татарская кухня в новом прочтении, завтраки до вечера и живая музыка по выходным.</p>
         <div class="hero__cta">
-          <a class="btn btn--brass" href="#booking">Забронировать стол</a>
-          <a class="btn btn--ghost" href="#menu">Смотреть меню</a>
+          <a class="btn btn--brass" href="#booking" data-i18n="hero.book">Забронировать стол</a>
+          <a class="btn btn--ghost" href="#menu" data-i18n="hero.menu">Смотреть меню</a>
         </div>
       </div>
 
-      <a class="hero__badge" href="#menu" aria-label="Перейти к меню">
+      <a class="hero__badge" href="#menu" aria-label="Перейти к меню" data-i18n-attr="aria-label=hero.tomenu">
         <svg viewBox="0 0 120 120" aria-hidden="true">
           <defs><path id="circle" d="M60 60 m-44 0 a44 44 0 1 1 88 0 a44 44 0 1 1 -88 0"/></defs>
-          <text><textPath href="#circle">каждый день с 8 до 23 ✦ завтраки весь день ✦</textPath></text>
+          <text><textPath href="#circle" data-i18n="hero.badge">каждый день с 8 до 23 ✦ завтраки весь день ✦</textPath></text>
         </svg>
         <span class="hero__badge-arrow">↓</span>
       </a>
@@ -103,7 +143,7 @@
 
     <!-- Бегущая строка -->
     <div class="marquee" aria-hidden="true">
-      <div class="marquee__track">
+      <div class="marquee__track" data-i18n="marquee.1">
         <span>эчпочмак</span><b>✦</b><span>чак-чак</span><b>✦</b><span>флэт уайт</span><b>✦</b><span>губадия</span><b>✦</b><span>джаз по пятницам</span><b>✦</b><span>сырники до вечера</span><b>✦</b><span>татарский чай</span><b>✦</b>
         <span>эчпочмак</span><b>✦</b><span>чак-чак</span><b>✦</b><span>флэт уайт</span><b>✦</b><span>губадия</span><b>✦</b><span>джаз по пятницам</span><b>✦</b><span>сырники до вечера</span><b>✦</b><span>татарский чай</span><b>✦</b>
       </div>
@@ -111,50 +151,157 @@
 
     <!-- О кафе -->
     <section class="about" id="about">
-      <p class="about__text" data-words>Мы готовим так, будто за каждым столом сидит зритель первого ряда. Утром здесь пахнет сырниками и свежим хлебом, днём приходят на губадию и эчпочмак, а вечером гаснет свет и начинается программа.</p>
+      <p class="about__text" data-words data-i18n="about.text">Мы готовим так, будто за каждым столом сидит зритель первого ряда. Утром здесь пахнет сырниками и свежим хлебом, днём приходят на губадию и эчпочмак, а вечером гаснет свет и начинается программа.</p>
       <ul class="about__facts">
-        <li><strong>8:00–23:00</strong><span>без выходных, завтраки весь день</span></li>
-        <li><strong>60 мест</strong><span>зал, барная стойка и небольшая сцена</span></li>
-        <li><strong>5 вечеров</strong><span>в неделю с музыкой, кино или стендапом</span></li>
+        <li><strong>8:00–23:00</strong><span data-i18n="about.f1">без выходных, завтраки весь день</span></li>
+        <li><strong data-i18n="about.f2t">60 мест</strong><span data-i18n="about.f2">зал, барная стойка и небольшая сцена</span></li>
+        <li><strong data-i18n="about.f3t">5 вечеров</strong><span data-i18n="about.f3">в неделю с музыкой, кино или стендапом</span></li>
       </ul>
+      <a class="about__more" href="about.html"><span data-i18n="about.more">Наша история и команда</span><i aria-hidden="true">→</i></a>
     </section>
 
     <!-- Меню -->
     <section class="menu" id="menu">
       <div class="section-head">
-        <h2 class="h-reveal"><span>Меню</span></h2>
-        <p>Нажмите на блюдо, чтобы узнать подробности. Добавленное в корзину можно забрать с собой.</p>
+        <h2 class="h-reveal" data-i18n="menu.title">Меню</h2>
+        <p data-i18n="menu.lead">Нажмите на блюдо, чтобы узнать подробности. Добавленное в корзину можно забрать с собой.</p>
       </div>
-      <div class="tabs" role="tablist" aria-label="Категории меню">
+
+      <div class="menu-tools">
+        <label class="search">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+          <input type="search" id="menu-search" placeholder="Найти блюдо" autocomplete="off" data-i18n-attr="placeholder=menu.search,aria-label=menu.search" aria-label="Найти блюдо">
+          <button type="button" class="search__clear" id="search-clear" aria-label="Очистить" data-i18n-attr="aria-label=menu.clear" hidden></button>
+        </label>
+        <div class="filters" role="group" aria-label="Фильтры" data-i18n-attr="aria-label=menu.filters">
+          <button type="button" class="filter" data-filter="veg" aria-pressed="false"><span aria-hidden="true">🌿</span><span data-i18n="filter.veg">Без мяса</span></button>
+          <button type="button" class="filter" data-filter="spicy" aria-pressed="false"><span aria-hidden="true">🌶️</span><span data-i18n="filter.spicy">Острое</span></button>
+          <button type="button" class="filter" data-filter="hit" aria-pressed="false"><span aria-hidden="true">⭐</span><span data-i18n="filter.hit">Хиты</span></button>
+          <button type="button" class="filter" data-filter="cheap" aria-pressed="false"><span aria-hidden="true">💸</span><span data-i18n="filter.cheap">До 300 ₽</span></button>
+        </div>
+        <button type="button" class="quiz-btn" data-open-quiz>
+          <span class="quiz-btn__dice" aria-hidden="true">🎲</span><span data-i18n="quiz.open">Что взять?</span>
+        </button>
+      </div>
+
+      <div class="tabs" role="tablist" aria-label="Категории меню" data-i18n-attr="aria-label=menu.cats">
         <span class="tabs__pill" aria-hidden="true"></span>
       </div>
-      <div class="dishes" id="dishes" role="tabpanel"></div>
+      <p class="menu__found" id="menu-found" aria-live="polite"></p>
+      <div class="dishes" id="dishes"></div>
+      <div class="menu__empty" id="menu-empty" hidden>
+        <svg viewBox="0 0 200 200" aria-hidden="true"><circle cx="100" cy="108" r="80" fill="var(--line-soft)"/><circle cx="100" cy="100" r="80" fill="var(--card)"/><circle cx="100" cy="100" r="60" fill="none" stroke="var(--line)" stroke-width="2"/><path d="M80 92q6-8 12 0M108 92q6-8 12 0M84 124q16-10 32 0" stroke="var(--text-2)" stroke-width="4" fill="none" stroke-linecap="round"/></svg>
+        <p data-i18n="menu.empty">Ничего не нашлось. Попробуйте другое слово или снимите фильтры.</p>
+        <button type="button" class="btn btn--dark" id="reset-filters" data-i18n="menu.reset">Сбросить поиск</button>
+      </div>
+    </section>
+
+    <!-- Конструктор завтрака -->
+    <section class="builder" id="builder">
+      <div class="section-head">
+        <h2 class="h-reveal" data-i18n="builder.title">Соберите завтрак</h2>
+        <p data-i18n="builder.lead">Выберите основу, добавки и напиток. Тарелка соберётся у вас на глазах, а цена посчитается сама.</p>
+      </div>
+      <div class="builder__grid">
+        <div class="builder__steps">
+          <fieldset class="bstep">
+            <legend><i>1</i><span data-i18n="builder.base">Основа</span></legend>
+            <div class="bopts" id="b-bases"></div>
+          </fieldset>
+          <fieldset class="bstep">
+            <legend><i>2</i><span data-i18n="builder.toppings">Добавки</span> <em data-i18n="builder.upto">до 4</em></legend>
+            <div class="bopts bopts--small" id="b-toppings"></div>
+          </fieldset>
+          <fieldset class="bstep">
+            <legend><i>3</i><span data-i18n="builder.drink">Напиток</span></legend>
+            <div class="bopts bopts--small" id="b-drinks"></div>
+          </fieldset>
+        </div>
+        <div class="builder__stage">
+          <div class="builder__plate" id="b-plate" aria-hidden="true"></div>
+          <div class="builder__sum">
+            <div>
+              <p class="builder__list" id="b-list"></p>
+              <p class="builder__price"><span id="b-price">0</span> ₽</p>
+            </div>
+            <button type="button" class="btn btn--brass" id="b-add" data-i18n="builder.add">В корзину</button>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- Программа -->
     <section class="program" id="program">
       <div class="program__pin">
         <div class="program__head">
-          <h2 class="h-reveal"><span>Программа недели</span></h2>
-          <p>Вход свободный. Столы у сцены лучше бронировать заранее.</p>
+          <h2 class="h-reveal" data-i18n="program.title">Программа недели</h2>
+          <p data-i18n="program.lead">Вход свободный. Столы у сцены лучше бронировать заранее.</p>
         </div>
         <div class="program__track" id="events"></div>
       </div>
     </section>
 
-    <!-- Вторая бегущая строка -->
     <div class="marquee marquee--alt" aria-hidden="true">
-      <div class="marquee__track">
-        <span>бронь онлайн</span><b>✦</b><span>живая музыка</span><b>✦</b><span>с собой за 20 минут</span><b>✦</b><span>ул. Баумана, 44</span><b>✦</b><span>каждый день до 23:00</span><b>✦</b>
-        <span>бронь онлайн</span><b>✦</b><span>живая музыка</span><b>✦</b><span>с собой за 20 минут</span><b>✦</b><span>ул. Баумана, 44</span><b>✦</b><span>каждый день до 23:00</span><b>✦</b>
+      <div class="marquee__track" data-i18n="marquee.2">
+        <span>бронь онлайн</span><b>✦</b><span>живая музыка</span><b>✦</b><span>с собой за 20 минут</span><b>✦</b><span>подарочные сертификаты</span><b>✦</b><span>каждый день до 23:00</span><b>✦</b>
+        <span>бронь онлайн</span><b>✦</b><span>живая музыка</span><b>✦</b><span>с собой за 20 минут</span><b>✦</b><span>подарочные сертификаты</span><b>✦</b><span>каждый день до 23:00</span><b>✦</b>
       </div>
     </div>
+
+    <!-- Подарочный сертификат -->
+    <section class="gift" id="gift">
+      <div class="section-head">
+        <h2 class="h-reveal" data-i18n="gift.title">Подарочный сертификат</h2>
+        <p data-i18n="gift.lead">Выберите сумму и открытку, подпишите — и скачайте готовую картинку, чтобы отправить в мессенджере.</p>
+      </div>
+      <div class="gift__grid">
+        <form class="gift__form" id="gift-form" novalidate>
+          <fieldset class="field">
+            <legend data-i18n="gift.amount">Сумма</legend>
+            <div class="chips chips--wide" id="g-amounts"></div>
+            <label class="gift__custom"><span data-i18n="gift.other">Своя сумма</span>
+              <input type="number" id="g-custom" min="500" max="50000" step="100" inputmode="numeric" placeholder="1500">
+            </label>
+            <small class="field__error"></small>
+          </fieldset>
+          <fieldset class="field">
+            <legend data-i18n="gift.design">Открытка</legend>
+            <div class="swatches" id="g-designs"></div>
+          </fieldset>
+          <div class="field">
+            <label for="g-to" data-i18n="gift.to">Кому</label>
+            <input type="text" id="g-to" maxlength="28" placeholder="Лейсан" data-i18n-attr="placeholder=gift.toPh">
+          </div>
+          <div class="field">
+            <label for="g-from" data-i18n="gift.from">От кого</label>
+            <input type="text" id="g-from" maxlength="28" placeholder="Руслан" data-i18n-attr="placeholder=gift.fromPh">
+          </div>
+          <div class="field">
+            <label for="g-msg"><span data-i18n="gift.msg">Пожелание</span> <em id="g-count">0/90</em></label>
+            <textarea id="g-msg" rows="2" maxlength="90" placeholder="С днём рождения! Приходи на джаз в пятницу." data-i18n-attr="placeholder=gift.msgPh"></textarea>
+          </div>
+        </form>
+        <div class="gift__stage">
+          <div class="gcard" id="g-card" tabindex="0" role="button" aria-label="Перевернуть открытку" data-i18n-attr="aria-label=gift.flip">
+            <div class="gcard__inner">
+              <div class="gcard__face gcard__front" id="g-front"></div>
+              <div class="gcard__face gcard__back" id="g-back"></div>
+            </div>
+          </div>
+          <div class="gift__actions">
+            <button type="button" class="btn btn--ghost-dark" id="g-flip" data-i18n="gift.flipBtn">Перевернуть</button>
+            <button type="button" class="btn btn--brass" id="g-download" data-i18n="gift.download">Скачать открытку</button>
+          </div>
+          <p class="gift__demo" data-i18n="gift.demo">Демо: сертификат учебный, код не действует.</p>
+        </div>
+      </div>
+    </section>
 
     <!-- Вопросы -->
     <section class="faq" id="faq">
       <div class="section-head">
-        <h2 class="h-reveal"><span>Гостям</span></h2>
-        <p>Ответы на то, о чём чаще всего спрашивают по телефону.</p>
+        <h2 class="h-reveal" data-i18n="faq.title">Гостям</h2>
+        <p data-i18n="faq.lead">Ответы на то, о чём чаще всего спрашивают по телефону.</p>
       </div>
       <div class="faq__list" id="faq-list"></div>
     </section>
@@ -162,64 +309,69 @@
     <!-- Бронь -->
     <section class="booking" id="booking">
       <div class="booking__intro">
-        <h2 class="h-reveal"><span>Бронь стола</span></h2>
-        <p>Выберите день, время и число гостей. Держим стол 15 минут после назначенного времени.</p>
+        <h2 class="h-reveal" data-i18n="booking.title">Бронь стола</h2>
+        <p data-i18n="booking.lead">Выберите день, время, число гостей и стол на схеме зала. Держим стол 15 минут после назначенного времени.</p>
         <div class="my-bookings" id="my-bookings" hidden>
-          <h3>Ваши брони</h3>
+          <h3 data-i18n="booking.mine">Ваши брони</h3>
           <ul></ul>
         </div>
       </div>
 
       <form class="booking__form" id="booking-form" novalidate>
         <div class="field">
-          <label for="b-date">Дата</label>
+          <label for="b-date" data-i18n="booking.date">Дата</label>
           <input type="date" id="b-date" name="date" required>
           <small class="field__error"></small>
         </div>
 
         <fieldset class="field">
-          <legend>Время</legend>
+          <legend data-i18n="booking.time">Время</legend>
           <div class="chips" id="b-times"></div>
           <small class="field__error"></small>
         </fieldset>
 
         <div class="field field--row">
-          <span class="field__label" id="guests-label">Гостей</span>
+          <span class="field__label" id="guests-label" data-i18n="booking.guests">Гостей</span>
           <div class="stepper" role="group" aria-labelledby="guests-label">
-            <button type="button" data-step="-1" aria-label="Меньше гостей">−</button>
+            <button type="button" data-step="-1" aria-label="Меньше гостей" data-i18n-attr="aria-label=booking.less">−</button>
             <output id="b-guests">2</output>
-            <button type="button" data-step="1" aria-label="Больше гостей">+</button>
+            <button type="button" data-step="1" aria-label="Больше гостей" data-i18n-attr="aria-label=booking.more">+</button>
           </div>
         </div>
 
         <fieldset class="field">
-          <legend>Где сесть</legend>
-          <div class="segmented">
-            <label><input type="radio" name="zone" value="у сцены" checked><span>У сцены</span></label>
-            <label><input type="radio" name="zone" value="у окна"><span>У окна</span></label>
-            <label><input type="radio" name="zone" value="в тихом зале"><span>В тихом зале</span></label>
+          <legend data-i18n="booking.table">Стол</legend>
+          <div class="hall" id="hall">
+            <div class="hall__legend">
+              <span><i class="dot dot--free"></i><span data-i18n="hall.free">свободен</span></span>
+              <span><i class="dot dot--busy"></i><span data-i18n="hall.busy">занят</span></span>
+              <span><i class="dot dot--sel"></i><span data-i18n="hall.sel">ваш</span></span>
+            </div>
+            <div class="hall__map" id="hall-map"></div>
+            <p class="hall__info" id="hall-info" aria-live="polite"></p>
           </div>
+          <small class="field__error"></small>
         </fieldset>
 
         <div class="field">
-          <label for="b-name">Имя</label>
-          <input type="text" id="b-name" name="name" autocomplete="given-name" placeholder="Как к вам обращаться" required>
+          <label for="b-name" data-i18n="booking.name">Имя</label>
+          <input type="text" id="b-name" name="name" autocomplete="given-name" maxlength="40" placeholder="Как к вам обращаться" data-i18n-attr="placeholder=booking.namePh" required>
           <small class="field__error"></small>
         </div>
 
         <div class="field">
-          <label for="b-phone">Телефон</label>
+          <label for="b-phone" data-i18n="booking.phone">Телефон</label>
           <input type="tel" id="b-phone" name="phone" autocomplete="tel" inputmode="tel" placeholder="+7 (___) ___-__-__" required>
           <small class="field__error"></small>
         </div>
 
         <div class="field">
-          <label for="b-note">Пожелания <em>необязательно</em></label>
-          <textarea id="b-note" name="note" rows="2" placeholder="День рождения, детский стул, аллергия"></textarea>
+          <label for="b-note"><span data-i18n="booking.note">Пожелания</span> <em data-i18n="booking.optional">необязательно</em></label>
+          <textarea id="b-note" name="note" rows="2" maxlength="200" placeholder="День рождения, детский стул, аллергия" data-i18n-attr="placeholder=booking.notePh"></textarea>
         </div>
 
-        <button class="btn btn--brass btn--wide" type="submit">Забронировать стол</button>
-        <p class="booking__demo">Демо-версия: бронь сохраняется только в вашем браузере.</p>
+        <button class="btn btn--brass btn--wide" type="submit" data-i18n="booking.submit">Забронировать стол</button>
+        <p class="booking__demo" data-i18n="booking.demo">Демо-версия: бронь сохраняется только в вашем браузере.</p>
       </form>
     </section>
 
@@ -241,13 +393,13 @@
         <div class="pin"><span></span></div>
       </div>
       <div class="contacts__info">
-        <h2 class="h-reveal"><span>Как нас найти</span></h2>
+        <h2 class="h-reveal" data-i18n="contacts.title">Как нас найти</h2>
         <dl>
-          <div><dt>Адрес</dt><dd>Казань, ул. Баумана, 44<br>5 минут пешком от метро «Площадь Тукая»</dd></div>
-          <div><dt>Часы</dt><dd>Каждый день с 8:00 до 23:00</dd></div>
-          <div><dt>Телефон</dt><dd><a href="tel:+78430000000">+7 (843) 000-00-00</a></dd></div>
+          <div><dt data-i18n="contacts.addr">Адрес</dt><dd data-i18n="contacts.addrV">Казань, ул. Баумана, 44<br>5 минут пешком от метро «Площадь Тукая»</dd></div>
+          <div><dt data-i18n="contacts.hours">Часы</dt><dd data-i18n="contacts.hoursV">Каждый день с 8:00 до 23:00</dd></div>
+          <div><dt data-i18n="contacts.phone">Телефон</dt><dd><a href="tel:+78430000000">+7 (843) 000-00-00</a></dd></div>
         </dl>
-        <a class="btn btn--dark" id="route-link" target="_blank" rel="noopener" href="#">Построить маршрут</a>
+        <a class="btn btn--dark" id="route-link" target="_blank" rel="noopener" href="https://yandex.ru/maps/?text=%D0%9A%D0%B0%D0%B7%D0%B0%D0%BD%D1%8C%2C%20%D1%83%D0%BB%D0%B8%D1%86%D0%B0%20%D0%91%D0%B0%D1%83%D0%BC%D0%B0%D0%BD%D0%B0%2C%2044" data-i18n="contacts.route">Построить маршрут</a>
       </div>
     </section>
   </main>
@@ -255,67 +407,77 @@
   <footer class="footer">
     <div class="footer__word" aria-hidden="true">Performance</div>
     <div class="footer__row">
-      <p class="footer__note">Учебный проект для портфолио. Кафе вымышленное, заказы и брони никуда не отправляются.</p>
+      <p class="footer__note" data-i18n="footer.note">Учебный проект для портфолио. Кафе вымышленное, заказы и брони никуда не отправляются.</p>
       <div class="footer__links">
-        <button class="link-btn" type="button" data-install>Установить приложение</button>
-        <a href="https://github.com/bogomol499" target="_blank" rel="noopener">GitHub автора</a>
+        <a href="about.html" data-i18n="nav.about">О нас</a>
+        <a href="admin.html" data-i18n="footer.admin">Для сотрудников</a>
+        <button class="link-btn" type="button" data-install data-i18n="install.btn">Установить приложение</button>
+        <a href="https://github.com/bogomol499" target="_blank" rel="noopener" data-i18n="footer.github">GitHub автора</a>
       </div>
     </div>
-    <p class="footer__copy">© <span id="year">2026</span> Performance, Казань</p>
+    <p class="footer__copy">© <span data-year>2026</span> Performance, <span data-i18n="footer.city">Казань</span></p>
   </footer>
 
   <!-- ===== Выдвижные панели ===== -->
   <div class="backdrop" data-close></div>
 
-  <!-- Меню сайта -->
-  <aside class="drawer drawer--nav" id="nav" aria-hidden="true" aria-label="Меню сайта" role="dialog" aria-modal="true">
+  <aside class="drawer drawer--nav" id="nav" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Меню сайта" data-i18n-attr="aria-label=nav.site">
     <div class="drawer__bar">
       <span class="logo__word">Performance</span>
-      <button class="icon-btn close-btn" type="button" data-close aria-label="Закрыть меню"></button>
+      <button class="icon-btn close-btn" type="button" data-close aria-label="Закрыть" data-i18n-attr="aria-label=common.close"></button>
     </div>
     <nav class="bignav">
-      <a href="#menu"><span>Меню</span></a>
-      <a href="#program"><span>Программа</span></a>
-      <a href="#faq"><span>Гостям</span></a>
-      <a href="#booking"><span>Бронь стола</span></a>
-      <a href="#contacts"><span>Контакты</span></a>
+      <a href="#menu"><span data-i18n="nav.menu">Меню</span></a>
+      <a href="#builder"><span data-i18n="nav.builder">Конструктор</span></a>
+      <a href="#program"><span data-i18n="nav.program">Программа</span></a>
+      <a href="#gift"><span data-i18n="nav.gift">Сертификаты</span></a>
+      <a href="#booking"><span data-i18n="nav.bookingLong">Бронь стола</span></a>
+      <a href="about.html"><span data-i18n="nav.about">О нас</span></a>
     </nav>
     <div class="drawer__foot">
-      <p>Казань, ул. Баумана, 44<br>Каждый день с 8:00 до 23:00</p>
-      <button class="btn btn--brass" type="button" data-install>Установить приложение</button>
+      <p data-i18n="nav.info">Казань, ул. Баумана, 44<br>Каждый день с 8:00 до 23:00</p>
+      <div class="lang-switch" role="group" aria-label="Язык" data-i18n-attr="aria-label=lang.label">
+        <span class="lang-switch__pill" aria-hidden="true"></span>
+        <button type="button" data-lang="ru" aria-label="Русский">Рус</button>
+        <button type="button" data-lang="tt" aria-label="Татарча">Тат</button>
+      </div>
+      <button class="btn btn--brass" type="button" data-install data-i18n="install.btn">Установить приложение</button>
     </div>
   </aside>
 
-  <!-- Корзина -->
-  <aside class="drawer drawer--cart" id="cart" aria-hidden="true" aria-label="Корзина" role="dialog" aria-modal="true">
+  <aside class="drawer drawer--cart" id="cart" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Корзина" data-i18n-attr="aria-label=cart.title">
     <div class="drawer__bar">
-      <h2>Корзина</h2>
-      <button class="icon-btn close-btn" type="button" data-close aria-label="Закрыть корзину"></button>
+      <h2 data-i18n="cart.title">Корзина</h2>
+      <button class="icon-btn close-btn" type="button" data-close aria-label="Закрыть" data-i18n-attr="aria-label=common.close"></button>
     </div>
     <div class="cart__body">
       <ul class="cart__list" id="cart-list"></ul>
       <div class="cart__empty" id="cart-empty">
-        <svg viewBox="0 0 200 200" aria-hidden="true"><circle cx="100" cy="108" r="80" fill="rgba(15,61,62,.08)"/><circle cx="100" cy="100" r="80" fill="#fff"/><circle cx="100" cy="100" r="60" fill="none" stroke="#E4E9E4" stroke-width="2"/></svg>
-        <p>Здесь пока пусто. Загляните в меню и добавьте что-нибудь.</p>
-        <a class="btn btn--dark" href="#menu" data-close>Открыть меню</a>
+        <svg viewBox="0 0 200 200" aria-hidden="true"><circle cx="100" cy="108" r="80" fill="var(--line-soft)"/><circle cx="100" cy="100" r="80" fill="var(--card)"/><circle cx="100" cy="100" r="60" fill="none" stroke="var(--line)" stroke-width="2"/></svg>
+        <p data-i18n="cart.empty">Здесь пока пусто. Загляните в меню и добавьте что-нибудь.</p>
+        <a class="btn btn--dark" href="#menu" data-close data-i18n="cart.toMenu">Открыть меню</a>
       </div>
     </div>
     <div class="cart__foot" id="cart-foot">
-      <label class="cart__pickup">Заберу
+      <div class="cart__who">
+        <input type="text" id="c-name" maxlength="40" placeholder="Ваше имя" aria-label="Ваше имя" data-i18n-attr="placeholder=cart.name,aria-label=cart.name">
+        <input type="tel" id="c-phone" inputmode="tel" placeholder="+7 (___) ___-__-__" aria-label="Телефон" data-i18n-attr="aria-label=booking.phone">
+      </div>
+      <p class="cart__err" id="cart-err" role="alert"></p>
+      <label class="cart__pickup"><span data-i18n="cart.pickup">Заберу</span>
         <select id="pickup">
-          <option value="20">через 20 минут</option>
-          <option value="40">через 40 минут</option>
-          <option value="60">через час</option>
+          <option value="20" data-i18n="cart.p20">через 20 минут</option>
+          <option value="40" data-i18n="cart.p40">через 40 минут</option>
+          <option value="60" data-i18n="cart.p60">через час</option>
         </select>
       </label>
-      <div class="cart__total"><span>Итого</span><strong id="cart-total">0 ₽</strong></div>
-      <button class="btn btn--brass btn--wide" type="button" id="checkout">Оформить самовывоз</button>
+      <div class="cart__total"><span data-i18n="cart.total">Итого</span><strong id="cart-total">0 ₽</strong></div>
+      <button class="btn btn--brass btn--wide" type="button" id="checkout" data-i18n="cart.checkout">Оформить самовывоз</button>
     </div>
   </aside>
 
-  <!-- Карточка блюда -->
   <div class="sheet" id="dish" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="dish-name">
-    <button class="icon-btn close-btn close-btn--float" type="button" data-close aria-label="Закрыть"></button>
+    <button class="icon-btn close-btn close-btn--float" type="button" data-close aria-label="Закрыть" data-i18n-attr="aria-label=common.close"></button>
     <div class="sheet__handle" aria-hidden="true"></div>
     <div class="dish-sheet__art" id="dish-art"></div>
     <div class="dish-sheet__body">
@@ -323,42 +485,50 @@
       <h2 id="dish-name"></h2>
       <p id="dish-desc"></p>
       <div class="dish-sheet__buy">
-        <div class="stepper stepper--light" role="group" aria-label="Количество">
-          <button type="button" data-qty="-1" aria-label="Меньше">−</button>
+        <div class="stepper stepper--light" role="group" aria-label="Количество" data-i18n-attr="aria-label=common.qty">
+          <button type="button" data-qty="-1" aria-label="Меньше" data-i18n-attr="aria-label=common.less">−</button>
           <output id="dish-qty">1</output>
-          <button type="button" data-qty="1" aria-label="Больше">+</button>
+          <button type="button" data-qty="1" aria-label="Больше" data-i18n-attr="aria-label=common.more">+</button>
         </div>
         <button class="btn btn--brass" type="button" id="dish-add">Добавить</button>
       </div>
     </div>
   </div>
 
-  <!-- Готово -->
+  <div class="sheet sheet--quiz" id="quiz" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="quiz-title">
+    <button class="icon-btn close-btn close-btn--float" type="button" data-close aria-label="Закрыть" data-i18n-attr="aria-label=common.close"></button>
+    <div class="sheet__handle" aria-hidden="true"></div>
+    <div class="quiz">
+      <div class="quiz__progress" aria-hidden="true"><span id="quiz-bar"></span></div>
+      <h2 id="quiz-title" class="visually-hidden" data-i18n="quiz.open">Что взять?</h2>
+      <div class="quiz__viewport" id="quiz-body"></div>
+    </div>
+  </div>
+
   <div class="sheet sheet--done" id="done" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="done-title">
     <div class="sheet__handle" aria-hidden="true"></div>
     <svg class="done__check" viewBox="0 0 80 80" aria-hidden="true"><circle cx="40" cy="40" r="36"/><path d="M24 41l11 11 21-23"/></svg>
     <h2 id="done-title"></h2>
     <p id="done-text"></p>
-    <p class="done__demo">Это демо-версия сайта: данные никуда не отправляются.</p>
-    <button class="btn btn--dark btn--wide" type="button" data-close>Хорошо</button>
+    <p class="done__demo" data-i18n="done.demo">Это демо-версия сайта: данные никуда не отправляются.</p>
+    <button class="btn btn--dark btn--wide" type="button" data-close data-i18n="common.ok">Хорошо</button>
   </div>
 
-  <!-- Установка -->
   <div class="sheet" id="install" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="install-title">
-    <button class="icon-btn close-btn close-btn--float" type="button" data-close aria-label="Закрыть"></button>
+    <button class="icon-btn close-btn close-btn--float" type="button" data-close aria-label="Закрыть" data-i18n-attr="aria-label=common.close"></button>
     <div class="sheet__handle" aria-hidden="true"></div>
     <div class="install">
       <img src="icons/icon-192.png" alt="" width="72" height="72">
-      <h2 id="install-title">Performance на экране телефона</h2>
-      <p>Сайт можно установить как приложение: иконка на главном экране, открывается без адресной строки, меню доступно без интернета.</p>
+      <h2 id="install-title" data-i18n="install.title">Performance на экране телефона</h2>
+      <p data-i18n="install.text">Сайт можно установить как приложение: иконка на главном экране, открывается без адресной строки, меню доступно без интернета.</p>
       <div class="install__cols">
         <div>
           <h3>iPhone, Safari</h3>
-          <ol><li>Нажмите кнопку «Поделиться» внизу экрана.</li><li>Выберите «На экран Домой».</li><li>Нажмите «Добавить».</li></ol>
+          <ol data-i18n="install.ios"><li>Нажмите кнопку «Поделиться» внизу экрана.</li><li>Выберите «На экран Домой».</li><li>Нажмите «Добавить».</li></ol>
         </div>
         <div>
           <h3>Android, Chrome</h3>
-          <ol><li>Откройте меню ⋮ справа вверху.</li><li>Выберите «Установить приложение» или «Добавить на гл. экран».</li><li>Подтвердите установку.</li></ol>
+          <ol data-i18n="install.android"><li>Откройте меню ⋮ справа вверху.</li><li>Выберите «Установить приложение» или «Добавить на гл. экран».</li><li>Подтвердите установку.</li></ol>
         </div>
       </div>
     </div>
@@ -366,7 +536,6 @@
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-  <!-- Символ тюльпана (татарский орнамент) -->
   <svg width="0" height="0" style="position:absolute" aria-hidden="true">
     <symbol id="tulip" viewBox="0 0 40 40">
       <path d="M20 36V20" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round"/>
@@ -375,6 +544,10 @@
     </symbol>
   </svg>
 
+  <script src="js/data.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/art.js"></script>
+  <script src="js/core.js"></script>
   <script src="js/app.js"></script>
   <script src="js/motion.js"></script>
 </body>

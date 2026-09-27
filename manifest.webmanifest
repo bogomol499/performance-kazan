@@ -16,6 +16,7 @@
   ],
   "shortcuts": [
     { "name": "Меню", "url": "./#menu" },
-    { "name": "Бронь стола", "url": "./#booking" }
+    { "name": "Бронь стола", "url": "./#booking" },
+    { "name": "О нас", "url": "./about.html" }
   ]
 }

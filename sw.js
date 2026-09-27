@@ -1,12 +1,22 @@
 /* Service worker: сайт открывается даже без интернета.
    Меняйте номер версии, когда обновляете файлы сайта. */
-const VERSION = 'performance-v4';
+const VERSION = 'performance-v5';
 const FILES = [
   './',
   './index.html',
+  './about.html',
+  './admin.html',
   './css/style.css',
-  './js/app.js',
+  './css/features.css',
+  './css/pages.css',
   './css/motion.css',
+  './js/data.js',
+  './js/i18n.js',
+  './js/art.js',
+  './js/core.js',
+  './js/app.js',
+  './js/about.js',
+  './js/admin.js',
   './js/motion.js',
   './manifest.webmanifest',
   './icons/favicon.svg',
@@ -36,8 +46,8 @@ self.addEventListener('fetch', e => {
   if (req.mode === 'navigate') {
     e.respondWith(
       fetch(req)
-        .then(res => { const copy = res.clone(); caches.open(VERSION).then(c => c.put('./index.html', copy)); return res; })
-        .catch(() => caches.match('./index.html'))
+        .then(res => { const copy = res.clone(); caches.open(VERSION).then(c => c.put(req, copy)); return res; })
+        .catch(() => caches.match(req, { ignoreSearch: true }).then(r => r || caches.match('./index.html')))
     );
     return;
   }

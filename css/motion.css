@@ -57,7 +57,7 @@
 .motion .contacts__map svg { scale: var(--ms, 1.25); transform-origin: 52% 44%; }
 
 /* ---------- Подвал открывается из-под страницы ---------- */
-.motion main { position: relative; z-index: 1; background: var(--milk); }
+.motion main { position: relative; z-index: 1; background: var(--bg); transition: background-color .5s; }
 .motion .contacts { border-radius: 0 0 44px 44px; box-shadow: 0 40px 60px -30px rgba(6, 22, 22, .45); }
 .motion .footer { position: sticky; bottom: 0; z-index: 0; }
 .motion .footer > * { translate: 0 calc((1 - var(--fp, 1)) * -90px); }
@@ -65,3 +65,4 @@
 
 /* ---------- Кнопки тянутся к курсору ---------- */
 .motion .btn, .motion .icon-btn { transition: transform .35s var(--ease), background-color .3s, color .3s, box-shadow .3s, translate .5s var(--ease); }
+.motion .team { perspective: 1400px; }

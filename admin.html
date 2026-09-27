@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Админка — Performance</title>
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#0F3D3E">
+  <link rel="icon" href="icons/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700&family=Unbounded:wght@400;600;800&display=swap" rel="stylesheet">
+  <script>
+    (function () {
+      var d = document.documentElement; d.classList.add('js');
+      try {
+        var t = JSON.parse(localStorage.getItem('pf-theme'));
+        d.dataset.theme = t || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        if (JSON.parse(localStorage.getItem('pf-lang')) === 'tt') d.lang = 'tt';
+      } catch (e) { d.dataset.theme = 'light'; }
+    })();
+  </script>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/features.css">
+  <link rel="stylesheet" href="css/pages.css">
+</head>
+<body class="admin-body" data-page="admin">
+
+  <!-- Вход -->
+  <div class="ad-login" id="login">
+    <form class="ad-login__card" id="login-form" novalidate>
+      <svg class="logo__mark" viewBox="0 0 40 40" aria-hidden="true" style="color:var(--brass);width:40px;height:40px"><use href="#tulip"/></svg>
+      <h1 data-i18n="ad.login">Вход для сотрудников</h1>
+      <p data-i18n="ad.loginLead">Демо-админка вымышленного кафе. Пароль: performance</p>
+      <label class="visually-hidden" for="pw" data-i18n="ad.password">Пароль</label>
+      <input type="password" id="pw" autocomplete="current-password" placeholder="Пароль" data-i18n-attr="placeholder=ad.password">
+      <p class="ad-login__err" id="login-err" role="alert"></p>
+      <button class="btn btn--brass btn--wide" type="submit" data-i18n="ad.enter">Войти</button>
+      <a href="index.html" data-i18n="ad.toSite">Вернуться на сайт</a>
+    </form>
+  </div>
+
+  <!-- Панель -->
+  <div class="ad" id="app" hidden>
+    <aside class="ad-side">
+      <div class="ad-side__top">
+        <a href="index.html" class="logo" style="text-decoration:none"><svg class="logo__mark" viewBox="0 0 40 40" aria-hidden="true"><use href="#tulip"/></svg><span class="logo__word">Performance</span></a>
+        <div class="ad-side__tools">
+          <div class="lang-switch" role="group" aria-label="Язык" data-i18n-attr="aria-label=lang.label">
+            <span class="lang-switch__pill" aria-hidden="true"></span>
+            <button type="button" data-lang="ru" aria-label="Русский">Рус</button>
+            <button type="button" data-lang="tt" aria-label="Татарча">Тат</button>
+          </div>
+          <button class="icon-btn theme-btn" type="button" data-theme-toggle aria-label="Сменить тему" data-i18n-attr="aria-label=theme.toggle">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <mask id="moon-mask"><rect width="24" height="24" fill="#fff"/><circle class="theme-btn__cut" cx="17" cy="7" r="6" fill="#000"/></mask>
+              <circle class="theme-btn__core" cx="12" cy="12" r="5.5" mask="url(#moon-mask)"/>
+              <g class="theme-btn__rays"><path d="M12 2v2M12 20v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M2 12h2M20 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></g>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <nav class="ad-tabs" role="tablist" aria-label="Разделы" data-i18n-attr="aria-label=nav.label">
+        <button class="ad-tab" type="button" role="tab" data-view="overview"><span data-i18n="ad.overview">Обзор</span></button>
+        <button class="ad-tab" type="button" role="tab" data-view="orders"><span data-i18n="ad.orders">Заказы</span><span class="ad-tab__n" id="n-orders"></span></button>
+        <button class="ad-tab" type="button" role="tab" data-view="bookings"><span data-i18n="ad.bookings">Брони</span><span class="ad-tab__n" id="n-bookings"></span></button>
+        <button class="ad-tab" type="button" role="tab" data-view="menu"><span data-i18n="ad.menu">Меню</span></button>
+      </nav>
+      <div class="ad-side__foot">
+        <a href="index.html" data-i18n="ad.toSite">Вернуться на сайт</a>
+        <button class="link-btn" type="button" data-logout data-i18n="ad.logout">Выйти</button>
+      </div>
+    </aside>
+
+    <main class="ad-main">
+      <div class="ad-main__head">
+        <div>
+          <h1 id="view-title">Обзор</h1>
+          <p class="ad-live"><i aria-hidden="true"></i><span data-i18n="ad.live">Обновляется сразу: сделайте заказ на сайте в соседней вкладке.</span></p>
+        </div>
+        <div class="ad-actions">
+          <button class="btn btn--line btn--sm" type="button" id="seed" data-i18n="ad.demo">Заполнить примерами</button>
+          <button class="btn btn--line btn--sm" type="button" id="wipe" data-i18n="ad.clear">Очистить данные</button>
+          <button class="btn btn--line btn--sm ad-logout-m" type="button" data-logout data-i18n="ad.logout">Выйти</button>
+        </div>
+      </div>
+      <div id="view"></div>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="tulip" viewBox="0 0 40 40">
+      <path d="M20 36V20" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+      <path d="M20 30c-4-1-7-4-8-8 4 0 7 3 8 8Zm0 0c4-1 7-4 8-8-4 0-7 3-8 8Z" fill="currentColor"/>
+      <path d="M20 21c-6 0-9-5-9-12 3 2 5 3 6 5 0-4 1-7 3-10 2 3 3 6 3 10 1-2 3-3 6-5 0 7-3 12-9 12Z" fill="currentColor"/>
+    </symbol>
+  </svg>
+
+  <script src="js/data.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/art.js"></script>
+  <script src="js/core.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

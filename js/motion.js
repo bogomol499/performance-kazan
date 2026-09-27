@@ -46,33 +46,60 @@
     $$(selector).forEach((el, i) => tag(el, anim, base + i * step));
   }
 
-  tagAll('.about__facts li', 'swing', 120);
-  tagAll('.section-head p, .program__head p, .booking__intro > p', 'up', 0, 120);
-  tagAll('.tabs', 'left', 0, 80);
-  tagAll('.qa', 'left', 70);
-  tagAll('.event', 'right', 0);
-  tag($('.booking__form'), 'scale');
-  tag($('.contacts__map'), 'clip');
-  tagAll('.contacts dl > div', 'swing', 90, 100);
-  tag($('.pin'), 'drop', 250);
-  tagAll('.footer__row, .footer__copy', 'up', 80);
+  // Что и как прилетает (на всех страницах; чего нет — просто пропускается)
+  const RULES = [
+    ['.about__facts li', 'swing', 120],
+    ['.about__more', 'left', 0, 100],
+    ['.section-head p, .program__head p, .booking__intro > p, .page-lead', 'up', 0, 120],
+    ['.menu-tools', 'left', 0, 60],
+    ['.tabs', 'left', 0, 140],
+    ['.qa', 'left', 70],
+    ['.event', 'right', 0],
+    ['.bstep', 'up', 110],
+    ['.builder__stage', 'scale'],
+    ['.gift__form > .field', 'left', 70],
+    ['.gift__stage', 'scale'],
+    ['.booking__form', 'scale'],
+    ['.contacts__map', 'clip'],
+    ['.contacts dl > div', 'swing', 90, 100],
+    ['.pin', 'drop', 250],
+    ['.footer__row, .footer__copy', 'up', 80],
+    ['.tl__item', 'swing', 0],
+    ['.team-card', 'tilt', 90],
+    ['.gallery__frame', 'clip'],
+    ['.gallery__nav', 'up', 0, 120],
+    ['.ab-cta__inner', 'scale'],
+    ['.ab-hero__art', 'clip']
+  ];
 
-  // Карточки блюд: заново при каждой смене категории
-  const dishes = $('#dishes');
-  const tagDishes = () => {
+  function rescan() {
     for (let i = items.length - 1; i >= 0; i--) if (!items[i].el.isConnected) items.splice(i, 1);
-    $$('.dish', dishes).forEach((d, i) => tag(d, 'tilt', (i % 4) * 70 + Math.floor(i / 4) * 40));
-  };
-  tagDishes();
-  new MutationObserver(tagDishes).observe(dishes, { childList: true });
+    RULES.forEach(([sel, anim, step = 0, base = 0]) => $$(sel).forEach((el, i) => tag(el, anim, base + (step ? (i % 6) * step : 0))));
+    $$('.dish').forEach((d, i) => tag(d, 'tilt', (i % 4) * 70 + Math.floor(i / 4) * 40));
+    $$('.h-reveal').forEach(splitHeading);
+  }
 
   // Заголовки: каждое слово прилетает отдельно
-  $$('.h-reveal').forEach(h => {
+  function splitHeading(h) {
+    const it0 = items.find(x => x.el === h);
+    if (h.dataset.split === h.textContent.trim() && h.querySelector('.hw') && it0 && it0.words && it0.words[0] && it0.words[0].isConnected) return;
     const text = h.textContent.trim();
-    h.innerHTML = text.split(/\s+/).map(w => `<span class="hw"><span>${w}</span></span>`).join(' ');
-    tag(h, 'words');
-    items[items.length - 1].words = $$('.hw > span', h);
-  });
+    h.innerHTML = text.split(/\s+/).map(w => `<span class="hw"><span>${w.replace(/</g, '&lt;')}</span></span>`).join(' ');
+    h.dataset.split = h.textContent.trim();
+    let it = items.find(x => x.el === h);
+    if (!it) { tag(h, 'words'); it = items[items.length - 1]; }
+    it.words = $$('.hw > span', h);
+    apply(it);
+  }
+
+  let rescanQueued = false;
+  const queueRescan = () => {
+    if (rescanQueued) return;
+    rescanQueued = true;
+    requestAnimationFrame(() => { rescanQueued = false; rescan(); });
+  };
+  new MutationObserver(queueRescan).observe(document.body, { childList: true, subtree: true });
+  if (window.PF) PF.on('lang', () => { $$('.h-reveal').forEach(h => { delete h.dataset.split; }); queueRescan(); });
 
   function updateItems(vh, vw, force) {
     items.forEach(it => {
@@ -125,21 +152,25 @@
     el.style.scale = v.s.toFixed(4);
   }
 
+  rescan();
+
   /* ============ 2. Загрузка ============ */
 
   const hero = $('#hero');
-  const markReady = () => { if (hero.classList.contains('play')) root.classList.add('ready'); };
-  markReady();
-  new MutationObserver(markReady).observe(hero, { attributes: true, attributeFilter: ['class'] });
+  if (hero) {
+    const markReady = () => { if (hero.classList.contains('play')) root.classList.add('ready'); };
+    markReady();
+    new MutationObserver(markReady).observe(hero, { attributes: true, attributeFilter: ['class'] });
+  } else {
+    requestAnimationFrame(() => root.classList.add('ready'));
+  }
 
   /* ============ 3. Всё, что зависит от прокрутки ============ */
 
   const program = $('#program');
-  const events = $$('.event');
   const mapSvg = $('.contacts__map');
   const footer = $('.footer');
-  const footerChars = $$('.footer__word .ch');
-  const parallaxHeads = $$('.section-head h2, .program__head h2, .contacts__info h2');
+  let footerChars = $$('.footer__word .ch');
 
   // Бегущие строки: скорость и направление зависят от прокрутки
   const marquees = $$('.marquee').map((m, i) => ({
@@ -165,8 +196,10 @@
     updateItems(vh, vw, false);
 
     // первый экран
-    const hp = clamp(y / (hero.offsetHeight || vh), 0, 1);
-    if (Math.abs(hp - cacheHp) > 0.001) { hero.style.setProperty('--hp', hp.toFixed(4)); cacheHp = hp; }
+    if (hero) {
+      const hp = clamp(y / (hero.offsetHeight || vh), 0, 1);
+      if (Math.abs(hp - cacheHp) > 0.001) { hero.style.setProperty('--hp', hp.toFixed(4)); cacheHp = hp; }
+    }
 
     // бегущие строки
     marquees.forEach(m => {
@@ -181,7 +214,7 @@
     });
 
     // заголовки секций слегка едут вбок
-    parallaxHeads.forEach(h => {
+    $$('.section-head h2, .program__head h2, .contacts__info h2, .ab-head h2').forEach(h => {
       const r = h.getBoundingClientRect();
       if (r.bottom < -200 || r.top > vh + 200) return;
       const p = (r.top + r.height / 2 - vh / 2) / vh;
@@ -189,11 +222,11 @@
     });
 
     // тёмная секция раскрывается из карточки
-    const pr = program.getBoundingClientRect();
-    if (pr.top < vh && pr.bottom > 0) {
+    const pr = program ? program.getBoundingClientRect() : null;
+    if (pr && pr.top < vh && pr.bottom > 0) {
       program.style.setProperty('--cp', clamp(pr.top / vh, 0, 1).toFixed(3));
       // карточки наклоняются, когда проезжают экран
-      events.forEach(ev => {
+      $$('.event', program).forEach(ev => {
         const r = ev.getBoundingClientRect();
         const c = clamp((r.left + r.width / 2 - vw / 2) / vw, -1, 1);
         ev.style.transform = `rotate(${(c * 7).toFixed(2)}deg) translateY(${(Math.abs(c) * 50).toFixed(1)}px)`;
@@ -201,13 +234,14 @@
     }
 
     // карта приближается
-    const mr = mapSvg.getBoundingClientRect();
-    if (mr.top < vh && mr.bottom > 0) {
+    const mr = mapSvg ? mapSvg.getBoundingClientRect() : null;
+    if (mr && mr.top < vh && mr.bottom > 0) {
       const p = clamp((vh - mr.top) / (vh + mr.height), 0, 1);
       mapSvg.style.setProperty('--ms', (1.35 - p * 0.35).toFixed(3));
     }
 
     // подвал выезжает из-под страницы
+    if (footer) {
     const docH = document.documentElement.scrollHeight;
     const fh = footer.offsetHeight;
     const fp = clamp((y + vh - (docH - fh)) / fh, 0, 1);
@@ -216,6 +250,7 @@
       const pi = clamp(fp * 2.2 - i * 0.07, 0, 1), q = 1 - ease(pi);
       c.style.transform = q > 0.001 ? `translateY(${((i % 2 ? 1 : -1) * q * 115).toFixed(1)}%) rotate(${((i % 2 ? 1 : -1) * q * 20).toFixed(1)}deg)` : 'none';
     });
+    }
 
     requestAnimationFrame(frame);
   }
@@ -280,7 +315,7 @@
     });
 
     // карточки блюд наклоняются за мышью
-    dishes.addEventListener('pointermove', e => {
+    document.addEventListener('pointermove', e => {
       const card = e.target.closest('.dish');
       if (!card) return;
       const r = card.getBoundingClientRect();
@@ -290,7 +325,7 @@
       const svg = $('.dish__art svg', card);
       if (svg) svg.style.translate = `${(x * 18).toFixed(1)}px ${(y * 14).toFixed(1)}px`;
     });
-    dishes.addEventListener('pointerout', e => {
+    document.addEventListener('pointerout', e => {
       const card = e.target.closest('.dish');
       if (!card || card.contains(e.relatedTarget)) return;
       card.classList.remove('tilting');
