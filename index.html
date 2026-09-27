@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Performance — кафе-сцена в Казани</title>
+  <meta name="description" content="Performance — кафе-сцена в центре Казани: татарская кухня в новом прочтении, завтраки до вечера и живая музыка по выходным. Учебный проект для портфолио.">
+  <meta name="theme-color" content="#0F3D3E">
+
+  <!-- Приложение (PWA) -->
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="icons/icon-192.png" type="image/png" sizes="192x192">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Performance">
+
+  <!-- Превью ссылки в мессенджерах -->
+  <meta property="og:title" content="Performance — кафе-сцена в Казани">
+  <meta property="og:description" content="Меню, программа вечеров и бронь стола онлайн.">
+  <meta property="og:image" content="icons/og.png">
+  <meta property="og:type" content="website">
+
+  <!-- Шрифты -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700&family=Unbounded:wght@400;600;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/motion.css">
+  <script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+
+  <!-- Занавес при загрузке -->
+  <div class="curtain" aria-hidden="true">
+    <div class="curtain__half curtain__half--l"></div>
+    <div class="curtain__half curtain__half--r"></div>
+    <div class="curtain__word">Performance</div>
+  </div>
+
+  <div class="progress" aria-hidden="true"><span></span></div>
+
+  <!-- Шапка -->
+  <header class="topbar">
+    <a href="#top" class="logo" aria-label="Performance, на главную">
+      <svg class="logo__mark" viewBox="0 0 40 40" aria-hidden="true"><use href="#tulip"/></svg>
+      <span class="logo__word">Performance</span>
+    </a>
+    <nav class="topnav" aria-label="Разделы">
+      <a href="#menu">Меню</a>
+      <a href="#program">Программа</a>
+      <a href="#faq">Гостям</a>
+      <a href="#booking">Бронь</a>
+      <a href="#contacts">Контакты</a>
+    </nav>
+    <div class="topbar__actions">
+      <button class="icon-btn cart-btn" type="button" data-open="cart" aria-label="Корзина">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l-1.2 11.1a2 2 0 0 1-2 1.9H8.2a2 2 0 0 1-2-1.9L5 8Z"/><path d="M9 10V6a3 3 0 0 1 6 0v4"/></svg>
+        <span class="cart-count" hidden>0</span>
+      </button>
+      <button class="icon-btn burger" type="button" data-open="nav" aria-label="Открыть меню сайта">
+        <span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main id="top">
+
+    <!-- Первый экран -->
+    <section class="hero" id="hero">
+      <div class="hero__spot" aria-hidden="true"></div>
+      <div class="hero__ornament" aria-hidden="true"></div>
+
+      <div class="hero__top">
+        <p class="hero__place">Казань, ул. Баумана, 44</p>
+        <p class="hero__status"><i></i><span id="open-status">Открыто до 23:00</span></p>
+      </div>
+
+      <h1 class="hero__title" aria-label="Performance">
+        <span class="line" aria-hidden="true">Perfor</span>
+        <span class="line line--stroke" aria-hidden="true">mance</span>
+      </h1>
+
+      <div class="hero__bottom">
+        <p class="hero__lead">Кафе-сцена в центре Казани. Татарская кухня в новом прочтении, завтраки до вечера и живая музыка по выходным.</p>
+        <div class="hero__cta">
+          <a class="btn btn--brass" href="#booking">Забронировать стол</a>
+          <a class="btn btn--ghost" href="#menu">Смотреть меню</a>
+        </div>
+      </div>
+
+      <a class="hero__badge" href="#menu" aria-label="Перейти к меню">
+        <svg viewBox="0 0 120 120" aria-hidden="true">
+          <defs><path id="circle" d="M60 60 m-44 0 a44 44 0 1 1 88 0 a44 44 0 1 1 -88 0"/></defs>
+          <text><textPath href="#circle">каждый день с 8 до 23 ✦ завтраки весь день ✦</textPath></text>
+        </svg>
+        <span class="hero__badge-arrow">↓</span>
+      </a>
+    </section>
+
+    <!-- Бегущая строка -->
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee__track">
+        <span>эчпочмак</span><b>✦</b><span>чак-чак</span><b>✦</b><span>флэт уайт</span><b>✦</b><span>губадия</span><b>✦</b><span>джаз по пятницам</span><b>✦</b><span>сырники до вечера</span><b>✦</b><span>татарский чай</span><b>✦</b>
+        <span>эчпочмак</span><b>✦</b><span>чак-чак</span><b>✦</b><span>флэт уайт</span><b>✦</b><span>губадия</span><b>✦</b><span>джаз по пятницам</span><b>✦</b><span>сырники до вечера</span><b>✦</b><span>татарский чай</span><b>✦</b>
+      </div>
+    </div>
+
+    <!-- О кафе -->
+    <section class="about" id="about">
+      <p class="about__text" data-words>Мы готовим так, будто за каждым столом сидит зритель первого ряда. Утром здесь пахнет сырниками и свежим хлебом, днём приходят на губадию и эчпочмак, а вечером гаснет свет и начинается программа.</p>
+      <ul class="about__facts">
+        <li><strong>8:00–23:00</strong><span>без выходных, завтраки весь день</span></li>
+        <li><strong>60 мест</strong><span>зал, барная стойка и небольшая сцена</span></li>
+        <li><strong>5 вечеров</strong><span>в неделю с музыкой, кино или стендапом</span></li>
+      </ul>
+    </section>
+
+    <!-- Меню -->
+    <section class="menu" id="menu">
+      <div class="section-head">
+        <h2 class="h-reveal"><span>Меню</span></h2>
+        <p>Нажмите на блюдо, чтобы узнать подробности. Добавленное в корзину можно забрать с собой.</p>
+      </div>
+      <div class="tabs" role="tablist" aria-label="Категории меню">
+        <span class="tabs__pill" aria-hidden="true"></span>
+      </div>
+      <div class="dishes" id="dishes" role="tabpanel"></div>
+    </section>
+
+    <!-- Программа -->
+    <section class="program" id="program">
+      <div class="program__pin">
+        <div class="program__head">
+          <h2 class="h-reveal"><span>Программа недели</span></h2>
+          <p>Вход свободный. Столы у сцены лучше бронировать заранее.</p>
+        </div>
+        <div class="program__track" id="events"></div>
+      </div>
+    </section>
+
+    <!-- Вторая бегущая строка -->
+    <div class="marquee marquee--alt" aria-hidden="true">
+      <div class="marquee__track">
+        <span>бронь онлайн</span><b>✦</b><span>живая музыка</span><b>✦</b><span>с собой за 20 минут</span><b>✦</b><span>ул. Баумана, 44</span><b>✦</b><span>каждый день до 23:00</span><b>✦</b>
+        <span>бронь онлайн</span><b>✦</b><span>живая музыка</span><b>✦</b><span>с собой за 20 минут</span><b>✦</b><span>ул. Баумана, 44</span><b>✦</b><span>каждый день до 23:00</span><b>✦</b>
+      </div>
+    </div>
+
+    <!-- Вопросы -->
+    <section class="faq" id="faq">
+      <div class="section-head">
+        <h2 class="h-reveal"><span>Гостям</span></h2>
+        <p>Ответы на то, о чём чаще всего спрашивают по телефону.</p>
+      </div>
+      <div class="faq__list" id="faq-list"></div>
+    </section>
+
+    <!-- Бронь -->
+    <section class="booking" id="booking">
+      <div class="booking__intro">
+        <h2 class="h-reveal"><span>Бронь стола</span></h2>
+        <p>Выберите день, время и число гостей. Держим стол 15 минут после назначенного времени.</p>
+        <div class="my-bookings" id="my-bookings" hidden>
+          <h3>Ваши брони</h3>
+          <ul></ul>
+        </div>
+      </div>
+
+      <form class="booking__form" id="booking-form" novalidate>
+        <div class="field">
+          <label for="b-date">Дата</label>
+          <input type="date" id="b-date" name="date" required>
+          <small class="field__error"></small>
+        </div>
+
+        <fieldset class="field">
+          <legend>Время</legend>
+          <div class="chips" id="b-times"></div>
+          <small class="field__error"></small>
+        </fieldset>
+
+        <div class="field field--row">
+          <span class="field__label" id="guests-label">Гостей</span>
+          <div class="stepper" role="group" aria-labelledby="guests-label">
+            <button type="button" data-step="-1" aria-label="Меньше гостей">−</button>
+            <output id="b-guests">2</output>
+            <button type="button" data-step="1" aria-label="Больше гостей">+</button>
+          </div>
+        </div>
+
+        <fieldset class="field">
+          <legend>Где сесть</legend>
+          <div class="segmented">
+            <label><input type="radio" name="zone" value="у сцены" checked><span>У сцены</span></label>
+            <label><input type="radio" name="zone" value="у окна"><span>У окна</span></label>
+            <label><input type="radio" name="zone" value="в тихом зале"><span>В тихом зале</span></label>
+          </div>
+        </fieldset>
+
+        <div class="field">
+          <label for="b-name">Имя</label>
+          <input type="text" id="b-name" name="name" autocomplete="given-name" placeholder="Как к вам обращаться" required>
+          <small class="field__error"></small>
+        </div>
+
+        <div class="field">
+          <label for="b-phone">Телефон</label>
+          <input type="tel" id="b-phone" name="phone" autocomplete="tel" inputmode="tel" placeholder="+7 (___) ___-__-__" required>
+          <small class="field__error"></small>
+        </div>
+
+        <div class="field">
+          <label for="b-note">Пожелания <em>необязательно</em></label>
+          <textarea id="b-note" name="note" rows="2" placeholder="День рождения, детский стул, аллергия"></textarea>
+        </div>
+
+        <button class="btn btn--brass btn--wide" type="submit">Забронировать стол</button>
+        <p class="booking__demo">Демо-версия: бронь сохраняется только в вашем браузере.</p>
+      </form>
+    </section>
+
+    <!-- Контакты -->
+    <section class="contacts" id="contacts">
+      <div class="contacts__map" aria-hidden="true">
+        <svg viewBox="0 0 600 420" preserveAspectRatio="xMidYMid slice">
+          <rect width="600" height="420" fill="#DCE6E0"/>
+          <path d="M-20 300 C 90 250, 160 330, 260 290 S 420 180, 620 230 L620 300 C 450 260, 380 360, 260 350 S 80 330, -20 360Z" fill="#A9D2C6"/>
+          <g stroke="#fff" stroke-width="14" fill="none" stroke-linecap="round">
+            <path d="M60 -10 L 250 420"/><path d="M-10 120 L 610 60"/><path d="M340 -10 L 300 260"/><path d="M-10 210 L 610 150"/><path d="M470 -10 L 540 240"/>
+          </g>
+          <g stroke="#fff" stroke-width="6" fill="none" opacity=".8">
+            <path d="M150 -10 L 200 240"/><path d="M-10 40 L 600 0"/><path d="M400 60 L 420 200"/>
+          </g>
+          <text x="420" y="300" font-size="18" fill="#4E8D80" font-family="Manrope, sans-serif" font-weight="700">Казанка</text>
+          <text x="352" y="112" font-size="13" fill="#6A7E7A" font-family="Manrope, sans-serif" transform="rotate(-84 352 112)">ул. Баумана</text>
+        </svg>
+        <div class="pin"><span></span></div>
+      </div>
+      <div class="contacts__info">
+        <h2 class="h-reveal"><span>Как нас найти</span></h2>
+        <dl>
+          <div><dt>Адрес</dt><dd>Казань, ул. Баумана, 44<br>5 минут пешком от метро «Площадь Тукая»</dd></div>
+          <div><dt>Часы</dt><dd>Каждый день с 8:00 до 23:00</dd></div>
+          <div><dt>Телефон</dt><dd><a href="tel:+78430000000">+7 (843) 000-00-00</a></dd></div>
+        </dl>
+        <a class="btn btn--dark" id="route-link" target="_blank" rel="noopener" href="#">Построить маршрут</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer__word" aria-hidden="true">Performance</div>
+    <div class="footer__row">
+      <p class="footer__note">Учебный проект для портфолио. Кафе вымышленное, заказы и брони никуда не отправляются.</p>
+      <div class="footer__links">
+        <button class="link-btn" type="button" data-install>Установить приложение</button>
+        <a href="https://github.com/bogomol499" target="_blank" rel="noopener">GitHub автора</a>
+      </div>
+    </div>
+    <p class="footer__copy">© <span id="year">2026</span> Performance, Казань</p>
+  </footer>
+
+  <!-- ===== Выдвижные панели ===== -->
+  <div class="backdrop" data-close></div>
+
+  <!-- Меню сайта -->
+  <aside class="drawer drawer--nav" id="nav" aria-hidden="true" aria-label="Меню сайта" role="dialog" aria-modal="true">
+    <div class="drawer__bar">
+      <span class="logo__word">Performance</span>
+      <button class="icon-btn close-btn" type="button" data-close aria-label="Закрыть меню"></button>
+    </div>
+    <nav class="bignav">
+      <a href="#menu"><span>Меню</span></a>
+      <a href="#program"><span>Программа</span></a>
+      <a href="#faq"><span>Гостям</span></a>
+      <a href="#booking"><span>Бронь стола</span></a>
+      <a href="#contacts"><span>Контакты</span></a>
+    </nav>
+    <div class="drawer__foot">
+      <p>Казань, ул. Баумана, 44<br>Каждый день с 8:00 до 23:00</p>
+      <button class="btn btn--brass" type="button" data-install>Установить приложение</button>
+    </div>
+  </aside>
+
+  <!-- Корзина -->
+  <aside class="drawer drawer--cart" id="cart" aria-hidden="true" aria-label="Корзина" role="dialog" aria-modal="true">
+    <div class="drawer__bar">
+      <h2>Корзина</h2>
+      <button class="icon-btn close-btn" type="button" data-close aria-label="Закрыть корзину"></button>
+    </div>
+    <div class="cart__body">
+      <ul class="cart__list" id="cart-list"></ul>
+      <div class="cart__empty" id="cart-empty">
+        <svg viewBox="0 0 200 200" aria-hidden="true"><circle cx="100" cy="108" r="80" fill="rgba(15,61,62,.08)"/><circle cx="100" cy="100" r="80" fill="#fff"/><circle cx="100" cy="100" r="60" fill="none" stroke="#E4E9E4" stroke-width="2"/></svg>
+        <p>Здесь пока пусто. Загляните в меню и добавьте что-нибудь.</p>
+        <a class="btn btn--dark" href="#menu" data-close>Открыть меню</a>
+      </div>
+    </div>
+    <div class="cart__foot" id="cart-foot">
+      <label class="cart__pickup">Заберу
+        <select id="pickup">
+          <option value="20">через 20 минут</option>
+          <option value="40">через 40 минут</option>
+          <option value="60">через час</option>
+        </select>
+      </label>
+      <div class="cart__total"><span>Итого</span><strong id="cart-total">0 ₽</strong></div>
+      <button class="btn btn--brass btn--wide" type="button" id="checkout">Оформить самовывоз</button>
+    </div>
+  </aside>
+
+  <!-- Карточка блюда -->
+  <div class="sheet" id="dish" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="dish-name">
+    <button class="icon-btn close-btn close-btn--float" type="button" data-close aria-label="Закрыть"></button>
+    <div class="sheet__handle" aria-hidden="true"></div>
+    <div class="dish-sheet__art" id="dish-art"></div>
+    <div class="dish-sheet__body">
+      <p class="dish-sheet__meta" id="dish-meta"></p>
+      <h2 id="dish-name"></h2>
+      <p id="dish-desc"></p>
+      <div class="dish-sheet__buy">
+        <div class="stepper stepper--light" role="group" aria-label="Количество">
+          <button type="button" data-qty="-1" aria-label="Меньше">−</button>
+          <output id="dish-qty">1</output>
+          <button type="button" data-qty="1" aria-label="Больше">+</button>
+        </div>
+        <button class="btn btn--brass" type="button" id="dish-add">Добавить</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Готово -->
+  <div class="sheet sheet--done" id="done" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="done-title">
+    <div class="sheet__handle" aria-hidden="true"></div>
+    <svg class="done__check" viewBox="0 0 80 80" aria-hidden="true"><circle cx="40" cy="40" r="36"/><path d="M24 41l11 11 21-23"/></svg>
+    <h2 id="done-title"></h2>
+    <p id="done-text"></p>
+    <p class="done__demo">Это демо-версия сайта: данные никуда не отправляются.</p>
+    <button class="btn btn--dark btn--wide" type="button" data-close>Хорошо</button>
+  </div>
+
+  <!-- Установка -->
+  <div class="sheet" id="install" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="install-title">
+    <button class="icon-btn close-btn close-btn--float" type="button" data-close aria-label="Закрыть"></button>
+    <div class="sheet__handle" aria-hidden="true"></div>
+    <div class="install">
+      <img src="icons/icon-192.png" alt="" width="72" height="72">
+      <h2 id="install-title">Performance на экране телефона</h2>
+      <p>Сайт можно установить как приложение: иконка на главном экране, открывается без адресной строки, меню доступно без интернета.</p>
+      <div class="install__cols">
+        <div>
+          <h3>iPhone, Safari</h3>
+          <ol><li>Нажмите кнопку «Поделиться» внизу экрана.</li><li>Выберите «На экран Домой».</li><li>Нажмите «Добавить».</li></ol>
+        </div>
+        <div>
+          <h3>Android, Chrome</h3>
+          <ol><li>Откройте меню ⋮ справа вверху.</li><li>Выберите «Установить приложение» или «Добавить на гл. экран».</li><li>Подтвердите установку.</li></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <!-- Символ тюльпана (татарский орнамент) -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="tulip" viewBox="0 0 40 40">
+      <path d="M20 36V20" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+      <path d="M20 30c-4-1-7-4-8-8 4 0 7 3 8 8Zm0 0c4-1 7-4 8-8-4 0-7 3-8 8Z" fill="currentColor"/>
+      <path d="M20 21c-6 0-9-5-9-12 3 2 5 3 6 5 0-4 1-7 3-10 2 3 3 6 3 10 1-2 3-3 6-5 0 7-3 12-9 12Z" fill="currentColor"/>
+    </symbol>
+  </svg>
+
+  <script src="js/app.js"></script>
+  <script src="js/motion.js"></script>
+</body>
+</html>
